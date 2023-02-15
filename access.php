@@ -46,6 +46,18 @@ class Access{
         }
     }
 
+    public function traer_jugadoras(){
+        $pdo = $this->Conectar();
+		$jugadoras = $pdo->query("SELECT id, nombre, apellido FROM jugadoras"); 
+		return $jugadoras;
+    }
+
+    public function cargar_jugadora_partido($idpartido, $idjugadora){
+        $pdo = $this->conectar();
+        $sql = "INSERT INTO estadistica_jugadora (idpartido, idjugadora, titular, goles, cornersafavor, cornersencontra) VALUES (?,?,1,0,0,0)";
+        $pdo->prepare($sql)->execute([$idpartido, $idjugadora]);
+
+    }
 
     public function login($user, $password){
         $pdo = $this->conectar();
@@ -61,6 +73,16 @@ class Access{
         }else{
             return "Password Incorrecta";
         }
+
+    }
+
+    public function alta_partido($rival, $fecha, $localidad, $tipopartido){
+        $pdo = $this->conectar();
+        $sql = "INSERT INTO datos_partido (rival, fecha, localidad, tipo_partido) VALUES (?,?,?,?)";
+        $pdo->prepare($sql)->execute([$rival, $fecha, $localidad, $tipopartido]);
+        $idpartido = $pdo->lastInsertId();
+
+        return $idpartido;
 
     }
 }
